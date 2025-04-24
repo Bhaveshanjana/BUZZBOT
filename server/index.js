@@ -1,6 +1,7 @@
 import express from "express";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { z } from "zod";
 
 const app = express();
 
@@ -9,6 +10,27 @@ const server = new McpServer({
   name: "example-server",
   version: "1.0.0",
 });
+
+// Creating an simple tool
+
+server.tool(
+  "addTwoNumber",
+  "Add Two Numbers",
+  {
+    a: z.number(),
+    b: z.number(),
+  },
+  async (args) => {
+    const { a, b } = args;
+    return {
+      content:[
+      {
+        type: "text",
+        text: `The sum of ${a} and ${b} is ${a + b}`,
+      },
+    ]}
+  }
+);
 
 // an object used to store active client connections by their session ID.
 const transports = {};
