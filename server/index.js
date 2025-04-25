@@ -1,6 +1,7 @@
 import express from "express";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { createPost } from "./mcp.tool.js";
 import { z } from "zod";
 
 const app = express();
@@ -11,8 +12,7 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Creating an simple tool
-
+// Creating 'addTwoNumber' tool
 server.tool(
   "addTwoNumber",
   "Add Two Numbers",
@@ -23,12 +23,26 @@ server.tool(
   async (args) => {
     const { a, b } = args;
     return {
-      content:[
-      {
-        type: "text",
-        text: `The sum of ${a} and ${b} is ${a + b}`,
-      },
-    ]}
+      content: [
+        {
+          type: "text",
+          text: `The sum of ${a} and ${b} is ${a + b}`,
+        },
+      ],
+    };
+  }
+);
+
+// tool for creating an post on 'x'
+server.tool(
+  "createPost",
+  "Create a post on 'X'(Twitter)",
+  {
+    status: z.string(),
+  },
+  async (args) => {
+    const { status } = args;
+    return await createPost(status);
   }
 );
 

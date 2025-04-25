@@ -19,6 +19,7 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+// loads available tools so ai use them
 mcpClient
   .connect(new SSEClientTransport(new URL("http://localhost:3000/sse")))
   .then(async () => {
@@ -79,6 +80,7 @@ async function chatloop(toolCall) {
     });
   }
 
+  // sends user data to ai with tools if asked
   const response = await ai.models.generateContent({
     model: "gemini-2.0-flash",
     contents: chatHistory,
